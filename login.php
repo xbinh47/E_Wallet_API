@@ -1,43 +1,27 @@
 <?php
-require_once('./api/authen.php');
-
-if (isset($_SESSION['id'])) {
-    header('Location: index.php');
-    exit();
-}
+    session_start();
+    require_once('./db/dbhelper.php');
+    require_once('./utils/utility.php');
 
 $error = '';
-
-if (isset($_COOKIE['login'])) {
-    $error = "Your account have been lock now. Try again after 1 minutes";
-} else {
-    if (isset($_POST['username']) && isset($_POST['password'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        $data = login($username, $password);
-        if ($data['code'] != 1) {
-            $error = $data['error'];
-            if ($data['code'] == 2) {
-                if ($username != "admin") {
-                    $times = loginwrong($username);
-                    if ($times >= 6) {
-                        $error = "Your account has been locked because enter the wrong password many times. Please contact administrator for assistance.";
-                    }
-                }
-            }
-        } else {
-            if($_SESSION['state'] == 4){
-                $error = "Your account has been locked because enter the wrong password many times. Please contact administrator for assistance.";
-                session_destroy();
-            }
-            else if($_SESSION['state'] == 3){
-                $error = "Tài khoản này đã bị vô hiệu hóa, vui lòng liên hệ tổng đài 18001008";
-                session_destroy();
-            }else{
-                header('Location: index.php');
-                exit();
-            }
+if (isset($_POST['phone']) && isset($_POST['password'])) {
+    $phone = $_POST['phone'];
+    $password = $_POST['password'];
+    $hashPass = md5Security($password);
+    $sql = "select * from `users` where `phone` = '$phone' and `password` = '$hashPass'";
+    $user = executeResult($sql, true);
+    if($user != null){
+        $state = $user['idState'];
+        if($state == 3){
+            $_SESSION['id'] = $user['id'];
+            $_SESSION['state'] = 3;
+            header("Location: index.php");
+            exit();
+        }else{
+            $error = "Only admin can login this page.";
         }
+    }else{
+        $error = "Invalid Phone/Password";
     }
 }
 
@@ -52,7 +36,7 @@ include('header.php');
                 <div class="col-12 d-flex flex-column align-items-center my-3">
                     <img src="/img/logo.png" alt="">
                     <h1>E-wallet</h1>
-                </div>
+                </div>   
             </div>
             <div class="row justify-content-center mt-2 mb-4">
                 <div class="col-lg-4 col-md-6 col-sm-8">
@@ -61,10 +45,10 @@ include('header.php');
                             <h3>Sign In</h3>
                         </div>
                         <div class="panel-body">
-                            <form id="loginform" class="form-horizontal" action="" method="post">
+                            <form action="" method="POST" id="loginform" class="form-horizontal" >
                                 <div class="input-group mb-3">
                                     <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                                    <input id="login-username" type="text" class="form-control" name="username" value=""
+                                    <input id="login-username" type="text" class="form-control" name="phone" value = ""
                                         placeholder="Username or email">
                                 </div>
                                 <div class="input-group mb-2">

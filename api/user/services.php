@@ -4,8 +4,97 @@
 
     date_default_timezone_set('Asia/Ho_Chi_Minh');
 
-    function checkUser($email){
-        $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
+    function loginApp($phone, $password){
+        $hashPass = md5Security($password);
+        $sql = "select * from `users` where `phone` = '$phone' and `password` = '$hashPass'";
+        $user = executeResult($sql, true);
+        $sql = "select * from `users` where `phone` = '$phone'";
+        $userCheck = executeResult($sql, true);
+
+        if($user == null && $userCheck == null) {
+            return 2;
+        }
+        else if($user == null && $userCheck != null){
+            $id = $userCheck['id'];
+            $sql = "SELECT * FROM times_login WHERE id = '$id'";
+            $data = executeResult($sql, true);
+            if ($data == null) {
+                $sql = "INSERT INTO times_login(id, times)  VALUES('$id', 1)";
+                execute($sql);
+                return 4; 
+            }else{
+                $timeLogin = null;
+                if ($data['times'] == 5) {
+                    $oldState = $userCheck['idState'];
+                    $timelock = getNowDateTime();
+                    $sql = "UPDATE users SET idState = 2 WHERE id = '$id'";
+                    execute($sql);
+                    $timeLogin = "UPDATE times_login SET oldState = '$oldState', datelock = '$timelock' WHERE id = '$id'";
+                    execute($timeLogin);
+                    return 3;
+                }
+                if ($data['times'] < 5) {
+                    $timeLogin = "UPDATE times_login SET times = times + 1 WHERE id = '$id'";
+                    execute($timeLogin);
+                    return 4;
+                }
+            }
+        }else{
+            $state = $user['idState'];
+            if($state == 3){
+                return 1;
+            }else if($state == 2){
+                $id = $user['id'];
+                $sql = "SELECT * FROM times_login WHERE id = '$id'";
+                $data = executeResult($sql, true);
+                $datelock = date("Y-m-d", strtotime($data['datelock']));;
+                if (getNowDate() >= date('Y-m-d', strtotime('+1 week', strtotime($datelock)))){
+                    $oldState = $data['oldState'];
+                    $sql = "UPDATE users SET idState = '$oldState' WHERE id = '$id'";
+                    execute($sql);
+                    $sql = "DELETE FROM times_login WHERE id = '$id'";
+                    execute($sql);
+                    return 0;
+                }else{
+                    return 3;
+                }   
+            }else{
+                return 0;
+            }
+        }
+    }
+
+    function uploadFolder($email){
+        $target_dir = dirname(dirname(dirname(__FILE__)))."/"."uploads/";
+        $renameEmail = str_replace('.', '_', $email);
+        $target_dir = $target_dir . $renameEmail;
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir);
+        }
+    }
+
+    function register($phone,$email,$password){
+        $sql = "select * from `users` where `phone` = '$phone'";
+        $user = executeResult($sql, true);
+        if ($user != null){
+            die(json_encode(array('code' => 1,'data' => 'Phone has already been registered')));
+        }
+        $sql = "select * from `users` where `email` = '$email'";
+        $user = executeResult($sql, true);
+        if ($user != null){
+            die(json_encode(array('code' => 1,'data' => 'Email has already been registered')));
+        }
+        $hash = md5Security($password);
+        $createAt = date('Y-m-d H:i:s');
+        $sql = "insert into users(email,phone,password,createAt) values('$email','$phone','$hash','$createAt')";
+        // execute($sql);
+        // uploadFolder($email);
+        sendMail($email,$phone,$password);
+        die(json_encode(array('code' => 0,'data' => 'Register successfully')));
+    }
+
+    function checkUser($phone){
+        $sql = "SELECT * FROM `users` WHERE `phone` = '$phone'";
         $user = executeResult($sql, true);
         if(empty($user)){
             return false;

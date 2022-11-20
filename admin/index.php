@@ -5,18 +5,8 @@
         exit();
     }
 
-    if (isset($_SESSION['first'])) {
+    if ($_SESSION['state'] != 3) {
         header('Location: ../index.php');
-        exit();
-    }
-
-    if ($_SESSION['state'] != 5) {
-        header('Location: ../index.php');
-        exit();
-    }
-
-    if ($_SESSION['chucvu'] == 'user') {
-        header('Location: ../user/index.php');
         exit();
     }
 ?>

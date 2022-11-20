@@ -1,14 +1,15 @@
 <?php
+
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\SMTP;
     use PHPMailer\PHPMailer\Exception;
     date_default_timezone_set('Asia/Ho_Chi_Minh');
-    define('HOSTEMAIL','mail.phongdaotao.com');
-    define('EMAILER','sinhvien@phongdaotao.com');
-    define('EMAILPASS','svtdtu');
-    define('EMAILPORT',25);
+    define('HOSTEMAIL','smtp.gmail.com');
+    define('EMAILER','binhnguyenxuan47@gmail.com');
+    define('EMAILPASS','bydkbyftoieikmqs');
+    define('EMAILPORT',465);
 
-    require dirname(dirname(__FILE__)) .'/vendor/autoload.php';
+    require dirname(dirname(dirname(__FILE__))) .'/E_WALLET_API/vendor/autoload.php';
 
     function fixSqlInjection($str) {
         $str = str_replace('\\', '\\\\', $str);
@@ -137,12 +138,12 @@
         return !empty($matches);
     }
 
-    function sendMail($email, $username, $password) {
+    function sendMail($email, $phone, $password) {
         
         $mail = new PHPMailer(true);
         try {
             //Server settings
-            $mail->SMTPDebug = 0;               
+            $mail->SMTPDebug = 0;             
             $mail->isSMTP();         
             $mail->CharSet = 'UTF-8';                                          
             $mail->Host       = HOSTEMAIL;                   
@@ -150,7 +151,7 @@
             $mail->Username   = EMAILER;              
             $mail->Password   = EMAILPASS;
             $mail->Port       = EMAILPORT;                                                                          
-            // $mail->SMTPSecure = 'tls';                            
+            $mail->SMTPSecure = 'ssl';                            
             $mail->SMTPSecure = false;
             $mail->SMTPAutoTLS = false;        
         
@@ -158,14 +159,16 @@
             $mail->setFrom(EMAILER, 'From E-Wallet');
             $mail->addAddress($email, 'User');     
             $mail->isHTML(true);                                  
-            $mail->Subject = 'Activate your account';
-            $mail->Body    = "Username: '$username', Password: '$password'";
+            $mail->Subject = 'Your E-Wallet Account'; 
+            $mail->Body    = "Phone: '$phone', Password: '$password'";
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
         
             $mail->send();
             return true;
         } catch (Exception $e) {
+            echo($e);
             return false;
+
         }
     }
 
@@ -182,7 +185,7 @@
             $mail->Username   = EMAILER;              
             $mail->Password   = EMAILPASS;
             $mail->Port       = EMAILPORT;                                   
-            // $mail->SMTPSecure = 'tls';                            
+            // $mail->SMTPSecure = 'tls'  ;                            
             $mail->SMTPSecure = false;
             $mail->SMTPAutoTLS = false;      
         
@@ -198,6 +201,7 @@
             $mail->send();
             return true;
         } catch (Exception $e) {
+            echo($e);
             return false;
         }
     }
