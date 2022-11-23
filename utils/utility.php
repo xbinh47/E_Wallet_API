@@ -6,7 +6,7 @@
     date_default_timezone_set('Asia/Ho_Chi_Minh');
     define('HOSTEMAIL','smtp.gmail.com');
     define('EMAILER','binhnguyenxuan47@gmail.com');
-    define('EMAILPASS','bydkbyftoieikmqs');
+    define('EMAILPASS','ofagfkwmbfxozcja');
     define('EMAILPORT',465);
 
     require dirname(dirname(dirname(__FILE__))) .'/E_WALLET_API/vendor/autoload.php';
@@ -150,10 +150,17 @@
             $mail->SMTPAuth   = true;                                  
             $mail->Username   = EMAILER;              
             $mail->Password   = EMAILPASS;
-            $mail->Port       = EMAILPORT;                                                                          
+            $mail->Port       = EMAILPORT; 
             $mail->SMTPSecure = 'ssl';                            
-            $mail->SMTPSecure = false;
-            $mail->SMTPAutoTLS = false;        
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+                )
+                );                                                                      
+            $mail->SMTPAutoTLS = false; 
+    
         
             //Recipients
             $mail->setFrom(EMAILER, 'From E-Wallet');
@@ -185,8 +192,14 @@
             $mail->Username   = EMAILER;              
             $mail->Password   = EMAILPASS;
             $mail->Port       = EMAILPORT;                                   
-            // $mail->SMTPSecure = 'tls'  ;                            
-            $mail->SMTPSecure = false;
+            $mail->SMTPSecure = 'ssl';                            
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+                )
+                );                                                                      
             $mail->SMTPAutoTLS = false;      
         
             //Recipients
@@ -223,9 +236,15 @@
             $mail->Username   = EMAILER;              
             $mail->Password   = EMAILPASS;
             $mail->Port       = EMAILPORT;                                   
-            // $mail->SMTPSecure = 'tls';                            
-            $mail->SMTPSecure = false;
-            $mail->SMTPAutoTLS = false;
+            $mail->SMTPSecure = 'ssl';                            
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+                )
+                );                                                                      
+            $mail->SMTPAutoTLS = false; 
         
             //Recipients
             $mail->setFrom(EMAILER, 'From E-Wallet');

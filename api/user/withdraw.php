@@ -12,28 +12,24 @@
     $content = file_get_contents('php://input');
     
     $data=json_decode($content);
-
+    
+    
     if(is_null($data)){
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
     
-    if (!property_exists($data,'email') || !property_exists($data,'cardnumber')|| !property_exists($data,'expdate') || !property_exists($data,'cvv') || !property_exists($data,'amount') ){
+    if (!property_exists($data,'email') || !property_exists($data,'cardnumber') || !property_exists($data,'passtrans') || !property_exists($data,'amount') ){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
-
+    
     $email = $data->email;
     $cardnumber = $data->cardnumber;
-    $expdate = $data->expdate;
-    $cvv = $data->cvv;
+    $passtrans = $data->passtrans;
     $amount = $data->amount;
-    $note = '';
-    if (property_exists($data,'note')){
-        $note = $data->note;
-    }
 
     if (!checkUser($email)){
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
-
-    withdraw($email,$cardnumber,$expdate,$cvv,$amount,$note);
+    
+    withdraw ($email,$cardnumber,$passtrans,$amount);
 ?>

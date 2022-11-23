@@ -154,15 +154,16 @@ CREATE TABLE `transfer` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `passwordTrans` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(11) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `birthday` date DEFAULT NULL,
   `address` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `front` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `back` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `idState` int DEFAULT NULL,
+  `idState` int DEFAULT 0,
   `createAT` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updateAT` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `balance` bigint DEFAULT '0'
@@ -172,8 +173,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`, `phone`, `birthday`, `address`, `front`, `back`, `idState`, `createAT`, `updateAT`, `balance`) VALUES
-(0, NULL, 'admin', '14e1b600b1fd579f47433b88e8d85291', '0968278202', NULL, NULL, NULL, NULL, 3, '2022-05-23 12:50:17', '2022-05-31 05:06:46', 0);
+INSERT INTO `users` (`id`, `email`, `name`, `password`,`passwordTrans`, `phone`, `birthday`, `address`, `front`, `back`, `idState`, `createAT`, `updateAT`, `balance`) VALUES
+(0, "admin@gmail.com", 'admin', '14e1b600b1fd579f47433b88e8d85291','14e1b600b1fd579f47433b88e8d85291', '0968278202', NULL, NULL, NULL, NULL, 3, '2022-05-23 12:50:17', '2022-05-31 05:06:46', 0);
 
 -- --------------------------------------------------------
 
@@ -183,28 +184,18 @@ INSERT INTO `users` (`id`, `email`, `name`, `password`, `phone`, `birthday`, `ad
 
 CREATE TABLE `debidcard` (
   `cardnumber` int NOT NULL,
-  `expdate` date NOT NULL,
-  `cvv` int NOT NULL,
-  `balance` bigint NOT NULL
+  `cccd` date NOT NULL,
+  `name` int NOT NULL,
+  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `balance` bigint NOT NULL DEFAULT 1000000
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `debidcard`
---
-
-INSERT INTO `debidcard` (`cardnumber`, `expdate`, `cvv`, `balance`) VALUES
-(111111, '2022-10-10', 411, 984000000),
-(222222, '2022-11-11', 443, 1000000000),
-(333333, '2022-12-12', 577, 0);
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `debidcard`
 --
 
 CREATE TABLE `usercards` (
-  `id` int NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `cardnumber` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
@@ -382,7 +373,7 @@ ALTER TABLE `withdraw`
 
 
 ALTER TABLE `usercards`
-  ADD CONSTRAINT `usercard_ibfk_1` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `usercard_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE `usercards`
   ADD CONSTRAINT `usercard_ibfk_2` FOREIGN KEY (`cardnumber`) REFERENCES `debidcard` (`cardnumber`) ON DELETE CASCADE ON UPDATE CASCADE;  
 COMMIT;

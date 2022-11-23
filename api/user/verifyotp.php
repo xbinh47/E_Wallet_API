@@ -35,7 +35,7 @@
         die(json_encode(array('code' => 1, 'data' => 'Email này không có mã OTP')));
     }else{
         $otp_timestamp = $otp['otp_timestamp'];
-        $expire_time = date ("Y-m-d H:i:s", strtotime ($otp_timestamp ."+60 seconds"));
+        $expire_time = date ("Y-m-d H:i:s", strtotime ($otp_timestamp ."+120 seconds"));
         if (strtotime(getNowDateTime()) > strtotime($expire_time)){
             $sql = "DELETE FROM `otp` WHERE `email` = '$email'";
             execute($sql);
