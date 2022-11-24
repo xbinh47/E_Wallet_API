@@ -1,6 +1,8 @@
 <?php
     require_once('../../db/dbhelper.php');
     require_once('../../utils/utility.php');
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: *");
 
     date_default_timezone_set('Asia/Ho_Chi_Minh');
 

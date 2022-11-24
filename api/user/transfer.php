@@ -26,12 +26,15 @@
     $amount = $data->amount;
     $feepaid = $data->feepaid;
     $note = "";
+    
     if(property_exists($data,'note')){
         $note = $data->note;
     }
+
     if (!checkUser($email)){
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
+
     if (!checkReceiver($receiver)){
         die(json_encode(array('code' => 1, 'data' => 'Số điện thoại của người nhận không tồn tại')));
     }

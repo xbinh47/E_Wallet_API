@@ -1,6 +1,7 @@
 <?php
     require_once('config.php');
-
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: *");
     function execute($sql) {
         $con = mysqli_connect(HOST, USER, PASS, DB);
         mysqli_set_charset($con, 'utf8');
