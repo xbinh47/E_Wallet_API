@@ -7,7 +7,7 @@
     date_default_timezone_set('Asia/Ho_Chi_Minh');
     define('HOSTEMAIL','smtp.gmail.com');
     define('EMAILER','binhnguyenxuan47@gmail.com');
-    define('EMAILPASS','ofagfkwmbfxozcja');
+    define('EMAILPASS','rzkcogfmudnonbyu');
     define('EMAILPORT',465);
 
     require dirname(dirname(dirname(__FILE__))) .'/E_WALLET_API/vendor/autoload.php';
@@ -180,7 +180,7 @@
         }
     }
 
-    function sendOTP($email, $OTP) {
+    function sendOTPMail($email, $OTP) {
         $mail = new PHPMailer(true);
         try {
 
@@ -208,7 +208,7 @@
             $mail->addAddress($email, 'User');     
         
             $mail->isHTML(true);                           
-            $mail->Subject = 'Your OTP code';
+            $mail->Subject = 'Your OTP code to complete your registration';
             $mail->Body    = "Here is your OTP code: $OTP";
             $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
         

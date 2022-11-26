@@ -91,8 +91,24 @@
         $sql = "insert into users(email,phone,password,createAt) values('$email','$phone','$hash','$createAt')";
         execute($sql);
         uploadFolder($email);
-        sendMail($email,$phone,$password);
+        sendOTP($email);
         die(json_encode(array('code' => 0,'data' => 'Register successfully')));
+    }
+
+    function sendOTP($email){
+        $sql = "SELECT * FROM `otp` WHERE `email` = '$email'";
+        $otp = executeResult($sql, true);
+        if(empty($otp)){
+            $otp_pass=rand(100000, 999999);
+            $sql = "INSERT INTO `otp` (`email`, `otp_pass`,`otp_timestamp`) VALUES ('$email', '$otp_pass','".getNowDateTime()."')";
+            execute($sql);
+            sendOTPMail($email, $otp_pass);
+        }else{
+            $otp_pass=rand(100000, 999999);
+            $sql = "UPDATE `otp` SET `otp_pass` = '$otp_pass', `otp_timestamp` = '".getNowDateTime()."' WHERE `email` = '$email'";
+            execute($sql);
+            sendOTPMail($email, $otp_pass);
+        }
     }
 
     function checkUser($email){

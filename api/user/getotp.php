@@ -44,21 +44,6 @@
         }
     }
 
-    $sql = "SELECT * FROM `otp` WHERE `email` = '$email'";
-    $otp = executeResult($sql, true);
-    if(empty($otp)){
-        $otp_pass=rand(100000, 999999);
-        $sql = "INSERT INTO `otp` (`email`, `otp_pass`,`otp_timestamp`) VALUES ('$email', '$otp_pass','".getNowDateTime()."')";
-        execute($sql);
-        sendOTP($email, $otp_pass);
-        echo json_encode(array('code' => 0, 'data' => 'Đã gửi mã OTP vào email của bạn'));
-    }else{
-        $otp_pass=rand(100000, 999999);
-        $sql = "UPDATE `otp` SET `otp_pass` = '$otp_pass', `otp_timestamp` = '".getNowDateTime()."' WHERE `email` = '$email'";
-        execute($sql);
-        sendOTP($email, $otp_pass);
-        echo json_encode(array('code' => 0, 'data' => 'Đã gửi mã OTP vào email của bạn'));
-    }
 
 
 ?>

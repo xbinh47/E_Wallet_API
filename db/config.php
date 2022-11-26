@@ -1,5 +1,5 @@
 <?php
-    define('HOST', 'localhost:8001');
+    define('HOST', 'localhost');
     define('USER', 'root');
     define('PASS', '');
     define('DB', 'ewallet');
