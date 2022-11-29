@@ -125,7 +125,7 @@
         $hash = md5Security($password);
         $sql = "UPDATE `users` SET `password` = '$hash' WHERE `email` = '$email'";
         execute($sql);
-        echo json_encode(array('code' => 0, 'data' =>"Reset password successfully"));
+        die(json_encode(array('code' => 0, 'data' =>"Reset password successfully")));
     }
 
     function changePassword($email, $curr_pass, $new_pass){
@@ -184,16 +184,6 @@
         $date = new DateTime();
         return $date->format('Y-m-d');
     }
-
-    // function checkCard($cardnumber,$expdate,$cvv){
-    //     $expdateformat = getDateForDatabase($expdate);
-    //     $sql = "SELECT * FROM `debidcard` WHERE `cardnumber` = '$cardnumber' AND `expdate` = '$expdateformat' AND `cvv` = '$cvv'";
-    //     $card = executeResult($sql, true);
-    //     if ($card == null) {
-    //         return false;
-    //     }
-    //     return true;
-    // }
 
     function checkCard($email,$cardnumber){
         $sql = "SELECT * FROM `usercards` WHERE `email` = '$email' AND `cardnumber` = '$cardnumber'";

@@ -26,5 +26,9 @@
     $email = $data->email;
     $new_pass = $data->new_pass;
 
+    if (!checkUser($email)){
+        die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
+    }
+
     resetPassword($email, $new_pass);
 ?>
