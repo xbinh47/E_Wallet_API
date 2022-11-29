@@ -18,13 +18,14 @@
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
 
-    if (!property_exists($data,'phone') || !property_exists($data,'email') || !property_exists($data,'password')){
+    if (!property_exists($data,'phone') || !property_exists($data,'email') || !property_exists($data,'name') || !property_exists($data,'password')){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
 
     $phone = $data->phone;
     $email = $data->email;
+    $name = $data->name;
     $password = $data->password;
 
-    register($phone,$email,$password);
+    register($phone,$email,$name,$password);
 ?>

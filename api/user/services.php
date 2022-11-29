@@ -75,7 +75,7 @@
         }
     }
 
-    function register($phone,$email,$password){
+    function register($phone,$email,$name,$password){
         $sql = "select * from `users` where `phone` = '$phone'";
         $user = executeResult($sql, true);
         if ($user != null){
@@ -88,7 +88,7 @@
         }
         $hash = md5Security($password);
         $createAt = date('Y-m-d H:i:s');
-        $sql = "insert into users(email,phone,password,createAt) values('$email','$phone','$hash','$createAt')";
+        $sql = "insert into users(email,phone,name,password,createAt) values('$email','$phone','$name','$hash','$createAt')";
         execute($sql);
         uploadFolder($email);
         sendOTP($email);

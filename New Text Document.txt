@@ -1,15 +1,18 @@
-    $sql = "SELECT * FROM `otp` WHERE `email` = '$email'";
-    $otp = executeResult($sql, true);
-    if(empty($otp)){
-        $otp_pass=rand(100000, 999999);
-        $sql = "INSERT INTO `otp` (`email`, `otp_pass`,`otp_timestamp`) VALUES ('$email', '$otp_pass','".getNowDateTime()."')";
-        execute($sql);
-        sendOTPMail($email, $otp_pass);
-        die(json_encode(array('code' => 0, 'data' => 'OTP đã được gửi đến email của bạn')));
-    }else{
-        $otp_pass=rand(100000, 999999);
-        $sql = "UPDATE `otp` SET `otp_pass` = '$otp_pass', `otp_timestamp` = '".getNowDateTime()."' WHERE `email` = '$email'";
-        execute($sql);
-        sendOTPMail($email, $otp_pass);
-        die(json_encode(array('code' => 0, 'data' => 'OTP đã được gửi đến email của bạn')));
-    }
+$phone = $data->phone;
+        $sql = "SELECT `email`,`balance`,`phone`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
+        $users = executeResult($sql, true);
+        if (!empty($users)) {
+            // $sql = "SELECT `phone` FROM `users` WHERE `email` = '$email'";
+            // $phoneSender = executeResult($sql, true);
+            // if($phoneSender['phone'] == $phone){
+            //     die(json_encode(array('code' => 1, 'data' => 'Không thể chuyển tiền cho chính mình')));
+            // }
+            // if ($users['idState'] ==2 ){
+            //     die(json_encode(array('code' => 0, 'data' => $users)));
+            // }else{
+            //     die(json_encode(array('code' => 1, 'data' => 'Người dùng chưa được xác minh tài khoản')));
+            // }
+            die(json_encode(array('code' => 0, 'data' => $users)));
+        } else {
+            die(json_encode(array('code' => 1, 'data' => "Không có người dùng này trong hệ thống")));
+        }
