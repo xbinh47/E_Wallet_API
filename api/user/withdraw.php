@@ -31,5 +31,5 @@
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
     
-    withdraw ($email,$cardnumber,$passtrans,$amount);
+    withdraw ($email,$cardnumber,$amount);
 ?>

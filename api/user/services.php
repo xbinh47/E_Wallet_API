@@ -163,6 +163,36 @@
         die(json_encode(array('code' => 0,'data' =>"Your passwordTrans has setted successfully")));
     }
 
+    function getLinkCard($email){
+        $sql = "SELECT * FROM `usercards` WHERE `email` = '$email'";
+        $usercards = executeResult($sql);
+        $result = array();
+        foreach ($usercards as $usercard){
+            $cardnumber = $usercard['cardnumber'];
+            $sql = "SELECT * FROM `debidcard` WHERE `cardnumber` = '$cardnumber'";
+            $debidcard = executeResult($sql, true);
+            $result[] = $debidcard;
+        }
+        die(json_encode(array('code' => 0,'data' => $result)));
+    }
+
+    function checkTransPass($email,$passtrans){
+        $hashPassTrans = md5Security($passtrans);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
+        $user = executeResult($sql, true);
+        if ($user == null) {
+            die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
+        }
+        die(json_encode(array('code' => 0,'data' =>"Mật khẩu giao dịch hợp lệ")));
+    }
+
+    function changeTransPass($email,$newtranspass){
+        $hashPassTrans = md5Security($newtranspass);
+        $sql = "UPDATE users SET passwordTrans = '$hashPassTrans' WHERE email = '$email'";
+        execute($sql);
+        die(json_encode(array('code' => 0,'data' =>"Your passwordTrans has changed successfully")));
+    }
+
     function getDateForDatabase($date){
         $timestamp = strtotime($date);
         $date_formated = date('Y-m-d', $timestamp);
@@ -237,7 +267,7 @@
         execute($sql);
     }
 
-    function deposit($email,$cardnumber,$passtrans,$amount) {
+    function deposit($email,$cardnumber,$amount) {
         if(!checkCard($email,$cardnumber)){
             die (json_encode(array('code' => 1, 'data' => 'Thông tin thẻ không hợp lệ')));
         }
@@ -246,13 +276,6 @@
         $debidcard = executeResult($sql,true);
         if ($debidcard['balance'] < $amount) {
             die (json_encode(array('code' => 1, 'data' => 'Số dư thẻ không đủ')));
-        }
-
-        $hashPassTrans = md5Security($passtrans);
-        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
-        $user = executeResult($sql, true);
-        if ($user == null) {
-            die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
         
         $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
@@ -276,7 +299,7 @@
         execute($sql);
     }
 
-    function withdraw($email,$cardnumber,$passtrans,$amount){
+    function withdraw($email,$cardnumber,$amount){
         if(!checkCard($email,$cardnumber)){
             die (json_encode(array('code' => 1, 'data' => 'Thông tin thẻ không hợp lệ')));
         }
@@ -285,13 +308,6 @@
         $user = executeResult($sql, true);
         if ($user['balance'] < $amount) {
             die (json_encode(array('code' => 1, 'data' => 'Số dư tài khoản không đủ')));
-        }
-
-        $hashPassTrans = md5Security($passtrans);
-        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
-        $user = executeResult($sql, true);
-        if ($user == null) {
-            die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
 
         $sql = "UPDATE `users` SET `balance` = `balance` - $amount WHERE `email` = '$email'";
@@ -393,6 +409,10 @@
             topupHistory($email,$networkname,$price,$quantity);
             echo json_encode(array('code' => 0, 'data' => 'Mua thẻ thành công'));
         }
+    }
+
+    function getChart($email, $chartType, $dateType){
+        
     }
 
     function getAllTransactions($email){

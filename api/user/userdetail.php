@@ -23,7 +23,7 @@
 
     if(property_exists($data,'phone')){
         $phone = $data->phone;
-        $sql = "SELECT `email`,`balance`,`phone`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
+        $sql = "SELECT `email`,`balance`,`phone`,`name`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
         $users = executeResult($sql, true);
         if (!empty($users)) {
             // $sql = "SELECT `phone` FROM `users` WHERE `email` = '$email'";
