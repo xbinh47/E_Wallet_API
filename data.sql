@@ -154,6 +154,7 @@ CREATE TABLE `transfer` (
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
+  `idUser` char(6) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
@@ -173,8 +174,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `email`, `name`, `password`,`passwordTrans`, `phone`, `birthday`, `address`, `front`, `back`, `idState`, `createAT`, `updateAT`, `balance`) VALUES
-(0, "admin@gmail.com", 'admin', '14e1b600b1fd579f47433b88e8d85291','14e1b600b1fd579f47433b88e8d85291', '0968278202', NULL, NULL, NULL, NULL, 3, '2022-05-23 12:50:17', '2022-05-31 05:06:46', 0);
+INSERT INTO `users` (`id`, `idUser`, `email`, `name`, `password`,`passwordTrans`, `phone`, `birthday`, `address`, `front`, `back`, `idState`, `createAT`, `updateAT`, `balance`) VALUES
+(0,0,"admin@gmail.com", 'admin', '14e1b600b1fd579f47433b88e8d85291','14e1b600b1fd579f47433b88e8d85291', '0968278202', NULL, NULL, NULL, NULL, 3, '2022-05-23 12:50:17', '2022-05-31 05:06:46', 0);
 
 -- --------------------------------------------------------
 
@@ -275,6 +276,7 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `phone` (`phone`),
+  ADD UNIQUE KEY `idUser` (`idUser`),
   ADD KEY `idState` (`idState`);
 
 --

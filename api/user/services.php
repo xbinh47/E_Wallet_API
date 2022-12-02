@@ -277,7 +277,10 @@
             die (json_encode(array('code' => 1, 'data' => 'Thông tin thẻ không hợp lệ')));
         }
 
-        if(!checkTransPass($email,$passtrans)){
+        $hashPassTrans = md5Security($passtrans);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
+        $user = executeResult($sql, true);
+        if ($user == null) {
             die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
 
@@ -310,7 +313,10 @@
             die (json_encode(array('code' => 1, 'data' => 'Thông tin thẻ không hợp lệ')));
         }
 
-        if(!checkTransPass($email,$passtrans)){
+        $hashPassTrans = md5Security($passtrans);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
+        $user = executeResult($sql, true);
+        if ($user == null) {
             die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
 
@@ -342,7 +348,10 @@
     }
 
     function transfer($email,$receiver,$amount,$note,$passtrans){
-        if(!checkTransPass($email,$passtrans)){
+        $hashPassTrans = md5Security($passtrans);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
+        $user = executeResult($sql, true);
+        if ($user == null) {
             die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
 
@@ -386,9 +395,13 @@
     }
 
     function topupCard($email,$networkname,$price,$quantity,$passtrans){
-        if(!checkTransPass($email,$passtrans)){
+        $hashPassTrans = md5Security($passtrans);
+        $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
+        $user = executeResult($sql, true);
+        if ($user == null) {
             die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
+        
         $sql = "SELECT * FROM `network` WHERE `networkname` = '$networkname'";
         $network = executeResult($sql, true);
         if (empty($network)){
