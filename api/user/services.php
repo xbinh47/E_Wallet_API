@@ -90,6 +90,12 @@
         $createAt = date('Y-m-d H:i:s');
         $sql = "insert into users(email,phone,name,password,createAt) values('$email','$phone','$name','$hash','$createAt')";
         execute($sql);
+        $sql = "SELECT * FROM users WHERE email = '$email'";
+        $user = executeResult($sql, true);
+        $id = $user['id'];
+        $userId = (int) $user['id'] + 100000;
+        $sql = "UPDATE users SET idUser = $userId WHERE id = '$id'";
+        execute($sql);
         uploadFolder($email);
         sendOTP($email);
         die(json_encode(array('code' => 0,'data' => 'Register successfully')));
@@ -230,7 +236,7 @@
     }
 
     function checkReceiver($receiver){
-        $sql = "SELECT * FROM `users` WHERE `phone` = '$receiver' AND `idState` = 2";
+        $sql = "SELECT * FROM `users` WHERE `phone` = '$receiver'";
         $user = executeResult($sql, true);
         if (empty($user)) {
             return false;
@@ -355,8 +361,6 @@
             die (json_encode(array('code' => 1, 'data' => 'Mật khẩu giao dịch không hợp lệ')));
         }
 
-        $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
-        $user = executeResult($sql, true);
         if ($user['balance'] < $amount) {
             die (json_encode(array('code' => 1, 'data' => 'Số dư tài khoản không đủ')));
         }

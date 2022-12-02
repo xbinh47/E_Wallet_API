@@ -23,7 +23,7 @@
 
     if(property_exists($data,'phone')){
         $phone = $data->phone;
-        $sql = "SELECT `email`,`balance`,`phone`,`name`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
+        $sql = "SELECT `idUser`,`email`,`balance`,`phone`,`name`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
         $users = executeResult($sql, true);
         if (!empty($users)) {
             // $sql = "SELECT `phone` FROM `users` WHERE `email` = '$email'";
@@ -42,7 +42,7 @@
         }
     }else{
         $email = $data->email;
-        $sql= "SELECT * FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState` WHERE `users`.`email` = '$email'";
+        $sql = "SELECT `idUser`,`email`,`balance`,`phone`,`name`,`birthday`,`address`,`front`,`back`,`createAt`,`updateAt` FROM `users` JOIN `state` ON `users`.`idState` = `state`.`idState`  AND `users`.`phone` = '$phone'";
         $user = executeResult($sql, true);
         if (!empty($user)) {
             die(json_encode(array('code' => 0, 'data' => $user)));
