@@ -17,14 +17,14 @@
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
     
-    if (!property_exists($data,'email') || !property_exists($data,'receiver')|| !property_exists($data,'amount') || !property_exists($data,'feepaid') ){
+    if (!property_exists($data,'email') || !property_exists($data,'receiver')|| !property_exists($data,'amount') || !property_exists($data,'passtrans')){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
 
     $email = $data->email;
     $receiver = $data->receiver;
     $amount = $data->amount;
-    $feepaid = $data->feepaid;
+    $passtrans = $data->passtrans;
     $note = "";
     
     if(property_exists($data,'note')){
@@ -39,5 +39,5 @@
         die(json_encode(array('code' => 1, 'data' => 'Số điện thoại của người nhận không tồn tại')));
     }
 
-    transfer($email,$receiver,$amount,$feepaid,$note);
+    transfer($email,$receiver,$amount,$note,$passtrans);
 ?>

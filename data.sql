@@ -32,7 +32,7 @@ USE `ewallet`;
 CREATE TABLE `deposit` (
   `id` int NOT NULL,
   `idtrans` char(8) COLLATE utf8_unicode_ci NOT NULL,
-  `cardnumber` int NOT NULL
+  `cardnumber` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -183,9 +183,9 @@ INSERT INTO `users` (`id`, `email`, `name`, `password`,`passwordTrans`, `phone`,
 --
 
 CREATE TABLE `debidcard` (
-  `cardnumber` int NOT NULL,
-  `cccd` date NOT NULL,
-  `name` int NOT NULL,
+  `cardnumber` varchar(255) NOT NULL,
+  `cccd` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `balance` bigint NOT NULL DEFAULT 1000000
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
@@ -196,7 +196,7 @@ CREATE TABLE `debidcard` (
 
 CREATE TABLE `usercards` (
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
-  `cardnumber` int NOT NULL
+  `cardnumber` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 
 --
@@ -206,7 +206,7 @@ CREATE TABLE `usercards` (
 CREATE TABLE `withdraw` (
   `id` int NOT NULL,
   `idtrans` char(8) COLLATE utf8_unicode_ci NOT NULL,
-  `cardnumber` int NOT NULL,
+  `cardnumber` varchar(255) NOT NULL,
   `note` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_unicode_ci;
 

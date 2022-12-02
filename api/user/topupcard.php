@@ -17,7 +17,7 @@
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
     
-    if (!property_exists($data,'email') || !property_exists($data,'networkname')|| !property_exists($data,'price') || !property_exists($data,'quantity')){
+    if (!property_exists($data,'email') || !property_exists($data,'networkname')|| !property_exists($data,'price') || !property_exists($data,'quantity') || !property_exists($data,'passtrans')){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
 
@@ -25,8 +25,9 @@
     $networkname = $data->networkname;
     $price = $data->price;
     $quantity = $data->quantity;
+    $passtrans = $data->passtrans;
     if (!checkUser($email)){
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
-    topupCard($email,$networkname,$price,$quantity);
+    topupCard($email,$networkname,$price,$quantity,$passtrans);
 ?>

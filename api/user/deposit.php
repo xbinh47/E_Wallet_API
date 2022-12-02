@@ -31,5 +31,5 @@
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
     
-    deposit($email,$cardnumber,$amount);
+    deposit($email,$cardnumber,$amount,$passtrans);
 ?>
