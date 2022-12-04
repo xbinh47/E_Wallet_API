@@ -472,10 +472,7 @@
                 } elseif ($transtype == 'withdraw') {
                     $result[$key]['withdraw'] += $amount;
                 } elseif ($transtype == 'transfer') {
-                    $idtrans = $transaction['idtrans'];
-                    $sql = "SELECT * FROM `transfer` WHERE `idtrans` = '$idtrans'";
-                    $transfer = executeResult($sql, true);
-                    if ($transfer['receiver'] == $phone) {
+                    if ($transaction['receiver'] == $phone) {
                         $result[$key]['transferOut'] += $amount;
                     } else {
                         $result[$key]['transferIn'] += $amount;
