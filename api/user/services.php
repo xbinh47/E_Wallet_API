@@ -405,6 +405,7 @@
         $cardseri = generateCardSeri();
         $sql = "INSERT INTO `topupcard` (`idtrans`,`cardseri`,`cardcode`, `networkname`, `price`) VALUES ('$id_increment','$cardseri','$cardcode', '$networkname', '$price')";
         execute($sql);
+        return $id_increment;
     }
 
     function topupCard($email,$networkname,$price,$passtrans){
@@ -427,8 +428,10 @@
         }else{
             $updateWallet = "UPDATE `users` SET `balance` = `balance` - $price WHERE `email` = '$email'";
             execute($updateWallet);
-            topupHistory($email,$networkname,$price);
-            die(json_encode(array('code' => 0, 'data' => 'Mua thẻ thành công')));
+            $id_increment=topupHistory($email,$networkname,$price);
+            $sql = "SELECT `cardseri`,`cardcode`,`networkname`,`price` FROM `topupcard` WHERE `idtrans` = '$id_increment'";
+            $card = executeResult($sql, true);
+            die(json_encode(array('code' => 0, 'data' => $card)));
         }
     }
 
@@ -534,7 +537,6 @@
         if (empty($transactions)){
             die(json_encode(array('code' => 1, 'data' => [])));
         }
-        #create a array of 12 array 
         $result = array();
         for ($i = 0; $i < 12; $i++){
             $result[$i] = array();

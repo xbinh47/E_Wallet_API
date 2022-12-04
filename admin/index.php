@@ -189,7 +189,7 @@
                                             <th>Type</th>
                                             <th>Date and Time</th>
                                             <th>Amount</th>
-                                            <th>Action</th>
+                                            <!-- <th>Action</th> -->
                                         </tr>
                                     </thead>
                                     <tbody id="confirm-transaction-list"></tbody>

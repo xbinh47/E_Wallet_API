@@ -1082,7 +1082,7 @@ $(function () {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({
-                idState: 1
+                idState: 0
             })
         })
             .done(function (data) {
@@ -1106,7 +1106,7 @@ $(function () {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({
-                idState: 2
+                idState: 1
             })
         })
             .done(function (data) {
@@ -1130,7 +1130,7 @@ $(function () {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({
-                idState: 3
+                idState: 4
             })
         })
             .done(function (data) {
@@ -1154,7 +1154,7 @@ $(function () {
             contentType: 'application/json',
             dataType: 'json',
             data: JSON.stringify({
-                idState: 4
+                idState: 2
             })
         })
             .done(function (data) {
@@ -1195,7 +1195,7 @@ $(function () {
                     $('#user-address').text(user.address)
                     $('#user-front').attr('src', `../uploads/${user.front}`)
                     $('#user-back').attr('src', `../uploads/${user.back}`)
-                    if (user.idState == 1) {
+                    if (user.idState == 0) {
                         $('#unlock-btn-wrap').hide()
                         $('#trans-his-btn-wrap').hide()
                         $('#verify-btn-group').show()
@@ -1310,7 +1310,7 @@ $(function () {
                                 })
                         })
                     }
-                    if (user.idState == 4 || user.idState == 3) {
+                    if (user.idState == 4) {
                         $('#verify-btn-group').hide()
                         $('#trans-his-btn-wrap').hide()
                         $('#unlock-btn-wrap').show()
@@ -1372,14 +1372,14 @@ $(function () {
                         `<td>${value.transtype}</td>` +
                         `<td>${value.datetrans}</td>` +
                         `<td>${value.amount}</td>` +
-                        `<td>` +
-                        `<button class="btn btn-outline-success transaction-accept me-2">Approval</button>` +
-                        `<button  class="btn btn-outline-danger transaction-cancel">Cancel</button>` +
-                        `</td>` +
+                        // `<td>` +
+                        // `<button class="btn btn-outline-success transaction-accept me-2">Approval</button>` +
+                        // `<button  class="btn btn-outline-danger transaction-cancel">Cancel</button>` +
+                        // `</td>` +
                         `</tr>`
                     )
                 })
-                $('.transaction-accept').click(function () {
+                $('.transaction-accept')?.click(function () {
                     const id = $(this).parents('tr').attr('idtrans')
                     const transEmail = $(this).parents('tr').attr('email')
                     const transType = $(this).parents('tr').attr('type')
@@ -1401,7 +1401,7 @@ $(function () {
                             getApproval()
                         })
                 })
-                $('.transaction-cancel').click(function () {
+                $('.transaction-cancel')?.click(function () {
                     const id = $(this).parents('tr').attr('idtrans')
                     const transEmail = $(this).parents('tr').attr('email')
                     const transType = $(this).parents('tr').attr('type')

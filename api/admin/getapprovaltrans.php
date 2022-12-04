@@ -27,7 +27,7 @@
         die(json_encode(array('code' => 3, 'data' => [])));
     }
 
-    $sql = "SELECT * FROM `transactions` WHERE `approval` = 0 ORDER BY `datetrans` DESC";
+    $sql = "SELECT * FROM `transactions` ORDER BY `datetrans` DESC";
     $transactions = executeResult($sql, false);
     if(empty($transactions)){
         die(json_encode(array('code' => 1, 'data' => [])));
