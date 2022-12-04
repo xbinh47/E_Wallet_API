@@ -1094,7 +1094,7 @@ $(function () {
                         `<td>${user.name}</td>` +
                         `<td>${user.phone}</td>` +
                         `<td>${user.email}</td>` +
-                        `<td>${user.birthday}</td>` +
+                        // `<td>${user.birthday}</td>` + 
                         `</tr>`
                     )
                 })
@@ -1118,7 +1118,7 @@ $(function () {
                         `<td>${user.name}</td>` +
                         `<td>${user.phone}</td>` +
                         `<td>${user.email}</td>` +
-                        `<td>${user.birthday}</td>` +
+                        // `<td>${user.birthday}</td>` +
                         `</tr>`
                     )
                 })
@@ -1142,7 +1142,7 @@ $(function () {
                         `<td>${user.name}</td>` +
                         `<td>${user.phone}</td>` +
                         `<td>${user.email}</td>` +
-                        `<td>${user.birthday}</td>` +
+                        // `<td>${user.birthday}</td>` +
                         `</tr>`
                     )
                 })
@@ -1166,7 +1166,7 @@ $(function () {
                         `<td>${user.name}</td>` +
                         `<td>${user.phone}</td>` +
                         `<td>${user.email}</td>` +
-                        `<td>${user.birthday}</td>` +
+                        // `<td>${user.birthday}</td>` +
                         `</tr>`
                     )
                 })

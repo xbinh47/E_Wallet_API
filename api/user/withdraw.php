@@ -18,17 +18,18 @@
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
     
-    if (!property_exists($data,'email') || !property_exists($data,'cardnumber') || !property_exists($data,'amount') ){
+    if (!property_exists($data,'email') || !property_exists($data,'cardnumber') || !property_exists($data,'amount') || !property_exists($data,'password')){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
     
     $email = $data->email;
     $cardnumber = $data->cardnumber;
     $amount = $data->amount;
+    $passtrans = $data->passtrans;
 
     if (!checkUser($email)){
         die(json_encode(array('code' => 1, 'data' => 'Email của User không tồn tại')));
     }
     
-    withdraw ($email,$cardnumber,$amount);
+    withdraw ($email,$cardnumber,$amount,$passtrans);
 ?>

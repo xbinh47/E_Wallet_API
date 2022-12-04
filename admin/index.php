@@ -114,7 +114,7 @@
                                                         <th>User Name</th>
                                                         <th>Phone Number</th>
                                                         <th>Email</th>
-                                                        <th>Date Of Birth</th>
+                                                        <!-- <th>Date Of Birth</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="activate-acc-list"></tbody>
@@ -132,7 +132,7 @@
                                                         <th>User Name</th>
                                                         <th>Phone Number</th>
                                                         <th>Email</th>
-                                                        <th>Date Of Birth</th>
+                                                        <!-- <th>Date Of Birth</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="actived-acc-list"></tbody>
@@ -150,7 +150,7 @@
                                                         <th>User Name</th>
                                                         <th>Phone Number</th>
                                                         <th>Email</th>
-                                                        <th>Date Of Birth</th>
+                                                        <!-- <th>Date Of Birth</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="disable-acc-list"></tbody>
@@ -168,7 +168,7 @@
                                                         <th>User Name</th>
                                                         <th>Phone Number</th>
                                                         <th>Email</th>
-                                                        <th>Date Of Birth</th>
+                                                        <!-- <th>Date Of Birth</th> -->
                                                     </tr>
                                                 </thead>
                                                 <tbody id="locked-acc-list"></tbody>
