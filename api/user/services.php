@@ -475,7 +475,7 @@
                     $idtrans = $transaction['idtrans'];
                     $sql = "SELECT * FROM `transfer` WHERE `idtrans` = '$idtrans'";
                     $transfer = executeResult($sql, true);
-                    if ($transfer['sender'] == $phone) {
+                    if ($transfer['receiver'] == $phone) {
                         $result[$key]['transferOut'] += $amount;
                     } else {
                         $result[$key]['transferIn'] += $amount;
@@ -520,17 +520,23 @@
             }else if ($transaction['transtype'] == 'topupcard'){
                 $result[$index]['topupcard'] += $transaction['amount'];
             }
-            return $result;
         }
+        return $result;
     }
 
     function getChart($email, $dateType){
+        $result = array();
         if ($dateType == 'Daily'){
             $result = getDailyTransactions($email);
+            die(json_encode(array('code' => 0, 'data' => $result)));
+
         }else if ($dateType == 'Monthly'){
             $result = getMonthlyTransactions($email);
+            die(json_encode(array('code' => 0, 'data' => $result)));
+
+        }else{
+            die(json_encode(array('code' => 1, 'data' => 'Invalid date type')));
         }
-        die(json_encode(array('code' => 0, 'data' => $result)));
     }
 
     function getAllTransactions($email){
