@@ -525,9 +525,9 @@
     }
 
     function getChart($email, $dateType){
-        if ($dateType == 'day'){
+        if ($dateType == 'Daily'){
             $result = getDailyTransactions($email);
-        }else if ($dateType == 'month'){
+        }else if ($dateType == 'Monthly'){
             $result = getMonthlyTransactions($email);
         }
         die(json_encode(array('code' => 0, 'data' => $result)));
