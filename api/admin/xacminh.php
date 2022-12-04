@@ -20,7 +20,7 @@
     $sql = "SELECT * FROM users WHERE id = '$id'";
     $user = executeResult($sql, true);
     if (!empty($user)) {
-        $sql = "UPDATE users SET idState= 2 WHERE id = '$id'";
+        $sql = "UPDATE users SET idState= 1 WHERE id = '$id'";
         execute($sql);
         die(json_encode(array('code' => 0, 'data' => 'Success')));
     }

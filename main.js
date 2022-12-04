@@ -1266,7 +1266,7 @@ $(function () {
                             })
                         })
                     }
-                    if (user.idState == 2) {
+                    if (user.idState == 1) {
                         $('#verify-btn-group').hide()
                         $('#unlock-btn-wrap').hide()
                         $('#trans-his-btn-wrap').show()

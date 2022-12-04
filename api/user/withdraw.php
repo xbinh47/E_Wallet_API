@@ -18,7 +18,7 @@
         die(json_encode(array('code' => 2, 'data' => 'Only json is supported')));
     }
     
-    if (!property_exists($data,'email') || !property_exists($data,'cardnumber') || !property_exists($data,'amount') || !property_exists($data,'password')){
+    if (!property_exists($data,'email') || !property_exists($data,'cardnumber') || !property_exists($data,'amount') || !property_exists($data,'passtrans')){
         die(json_encode(array('code' => 1, 'data' => 'Missing Paramenter')));
     }
     

@@ -440,42 +440,52 @@
             'deposit' => $deposit,
             'withdraw' => $withdraw,
             'transferIn' => $transferIn,
-            `transferOut` => $transferOut,
+            'transferOut' => $transferOut,
             'topupcard' => $topupcard
         );
         return $transObject;
     }
 
-    function getDaylyTransactions($email){
+    function getDailyTransactions($email){
         $sql = "SELECT * FROM `Users` WHERE `email` = '$email'";
         $user = executeResult($sql, true);
         $phone = $user['phone'];
-        $date = getNowDate();
-        $sql = "SELECT * FROM `transactions` WHERE `email` = '$email' AND CAST(`datetrans` AS DATE) = '$date'";
+        $result = array();
+        $dailyArr = array();
+        #get 5 days of transactions from now sql
+        $sql = "SELECT * FROM `transactions` WHERE `email` = '$email' AND `datetrans` >= DATE_SUB(NOW(), INTERVAL 5 DAY) ORDER BY `datetrans` DESC";
+        for ($i = 0; $i < 5; $i++) {
+            $date = date('Y-m-d', strtotime("-$i days"));
+            $dailyArr[$i] = $date;
+            $result[$i] = transObject(0,0,0,0,0);
+        }
         $transactions = executeResult($sql);
-        $deposit = 0;
-        $withdraw = 0;
-        $transferIn = 0;
-        $transferOut = 0;
-        $topupcard = 0;
-        foreach ($transactions as $transaction){
-            if ($transaction['transtype'] == 'deposit'){
-                $deposit += $transaction['amount'];
-            }else if ($transaction['transtype'] == 'withdraw'){
-                $withdraw += $transaction['amount'];
-            }else if ($transaction['transtype'] == 'transfer'){
-                if ($transaction['receiver'] != $phone){
-                    $transferOut += $transaction['amount'];
-                }else{
-                    $transferIn += $transaction['amount'];
+        foreach ($transactions as $transaction) {
+            $transtype = $transaction['transtype'];
+            $amount = $transaction['amount'];
+            $datetrans = $transaction['datetrans'];
+            $datetrans = date('Y-m-d', strtotime($datetrans));
+            $key = array_search($datetrans, $dailyArr);
+            if ($key !== false) {
+                if ($transtype == 'deposit') {
+                    $result[$key]['deposit'] += $amount;
+                } elseif ($transtype == 'withdraw') {
+                    $result[$key]['withdraw'] += $amount;
+                } elseif ($transtype == 'transfer') {
+                    $idtrans = $transaction['idtrans'];
+                    $sql = "SELECT * FROM `transfer` WHERE `idtrans` = '$idtrans'";
+                    $transfer = executeResult($sql, true);
+                    if ($transfer['sender'] == $phone) {
+                        $result[$key]['transferOut'] += $amount;
+                    } else {
+                        $result[$key]['transferIn'] += $amount;
+                    }
+                } elseif ($transtype == 'topupcard') {
+                    $result[$key]['topupcard'] += $amount;
                 }
-            }else if ($transaction['transtype'] == 'topupcard'){
-                $topupcard += $transaction['amount'];
             }
         }
-
-        $transObject = transObject($deposit,$withdraw,$transferIn,$transferOut,$topupcard);
-        return $transObject;
+        return $result;
     }
 
     function getMonthlyTransactions($email){
@@ -487,16 +497,11 @@
         $transactions = executeResult($sql);
         $result = array();
         $monthArr = array();
-        $deposit = 0;
-        $withdraw = 0;
-        $transferIn = 0;
-        $transferOut = 0;
-        $topupcard = 0;
         for ($i = 0; $i < 5; $i++){
             $date = getNowDate();
             $date = date('m', strtotime("-$i month", strtotime($date)));
             $monthArr[$i] = $date;
-            $result[$i] = transObject($deposit,$withdraw,$transferIn,$transferOut,$topupcard);
+            $result[$i] = transObject(0,0,0,0,0);
         }
         foreach($transactions as $transaction){
             $date = $transaction['datetrans'];
@@ -521,7 +526,7 @@
 
     function getChart($email, $dateType){
         if ($dateType == 'day'){
-            $result = getDaylyTransactions($email);
+            $result = getDailyTransactions($email);
         }else if ($dateType == 'month'){
             $result = getMonthlyTransactions($email);
         }

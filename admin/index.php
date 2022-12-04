@@ -260,9 +260,9 @@
                         <div class="col">
                             <button id="verify-btn" class="btn btn-outline-success w-100">Verify</button>
                         </div>
-                        <div class="col">
+                        <!-- <div class="col">
                             <button id="update-info-btn" class="btn btn-outline-info w-100">Update</button>
-                        </div>
+                        </div> -->
                         <div class="col">
                             <button id="cancel-btn" class="btn btn-outline-danger w-100">Cancel</button>
                         </div>
