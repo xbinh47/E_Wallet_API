@@ -97,7 +97,9 @@
         $sql = "UPDATE users SET idUser = $userId WHERE id = '$id'";
         execute($sql);
         uploadFolder($email);
-        sendOTP($email);
+        if(!sendOTP($email)){
+            die(json_encode(array('code' => 1,'data' => 'Send OTP fail')));
+        }  
         die(json_encode(array('code' => 0,'data' => 'Register successfully')));
     }
 
@@ -108,12 +110,18 @@
             $otp_pass=rand(100000, 999999);
             $sql = "INSERT INTO `otp` (`email`, `otp_pass`,`otp_timestamp`) VALUES ('$email', '$otp_pass','".getNowDateTime()."')";
             execute($sql);
-            sendOTPMail($email, $otp_pass);
+            if(!sendOTPMail($email, $otp_pass)){
+                return false;
+            }
+            return true;
         }else{
             $otp_pass=rand(100000, 999999);
             $sql = "UPDATE `otp` SET `otp_pass` = '$otp_pass', `otp_timestamp` = '".getNowDateTime()."' WHERE `email` = '$email'";
             execute($sql);
-            sendOTPMail($email, $otp_pass);
+            if(!sendOTPMail($email, $otp_pass)){
+                return false;
+            }
+            return true;
         }
     }
 
@@ -348,9 +356,10 @@
         execute($sql);
         $sql = "INSERT INTO `transfer` (`idtrans`,`note`) VALUES ('$id_increment','$note')";
         execute($sql);
-        if($approval == 1){
-            sendBalance($receiver,$id_increment);
+        if(!sendBalance($receiver,$id_increment)){
+            return false;
         }
+        return true;
     }
 
     function transfer($email,$receiver,$amount,$note,$passtrans){
@@ -369,36 +378,36 @@
         execute($sql);
         $sql = "UPDATE `users` SET `balance` = `balance` + $amount WHERE `phone` = '$receiver'";
         execute($sql);
-        transferHistory($email,$receiver,$amount,$note,1);
+        if(!transferHistory($email,$receiver,$amount,$note,1)){
+            die (json_encode(array('code' => 1, 'data' => 'Mail không tồn tại')));
+        };
         die(json_encode(array('code' => 0, 'data' => 'Chuyển tiền thành công vui lòng kiểm tra số dư trong tài khoản qua email'))); 
     }
 
-    function generateCardCode($networkname) {
-        $sql = "SELECT * FROM `network` WHERE `networkname` = '$networkname'";
-        $network = executeResult($sql, true);
-        if (empty($network)) {
-            return null;
-        }
-        $networkid = $network['networkid'];
-        $random = rand(10000, 99999);
-        return $networkid.$random;
+    function generateCardCode() {
+        $random = rand(1000000000000, 9999999999999);
+        return $random;
     }
 
-    function topupHistory($email,$networkname,$price,$quantity){
+    function generateCardSeri() {
+        $random = rand(100000000000000, 999999999999999);
+        return $random;
+    }
+
+    function topupHistory($email,$networkname,$price){
         $next_increment = getNextIncrement('topupcard');
         $id_increment = getIdIncrement($next_increment,'TC');
         $date_time = getNowDateTime();
-        $amount = $price * $quantity;
+        $amount = $price;
         $sql = "INSERT INTO `transactions` (`idtrans`, `transtype`, `email`,`datetrans`,`amount`, `approval`) VALUES ('$id_increment', 'topupcard', '$email', '$date_time','$amount', 1)";
         execute($sql);
-        for ($i = 0; $i<$quantity; $i++){
-            $cardcode = generateCardCode($networkname);
-            $sql = "INSERT INTO `topupcard` (`idtrans`,`cardcode`, `networkname`, `price`) VALUES ('$id_increment','$cardcode', '$networkname', '$price')";
-            execute($sql);
-        }
+        $cardcode = generateCardCode();
+        $cardseri = generateCardSeri();
+        $sql = "INSERT INTO `topupcard` (`idtrans`,`cardseri`,`cardcode`, `networkname`, `price`) VALUES ('$id_increment','$cardseri','$cardcode', '$networkname', '$price')";
+        execute($sql);
     }
 
-    function topupCard($email,$networkname,$price,$quantity,$passtrans){
+    function topupCard($email,$networkname,$price,$passtrans){
         $hashPassTrans = md5Security($passtrans);
         $sql = "SELECT * FROM `users` WHERE `email` = '$email' AND `passwordTrans` = '$hashPassTrans'";
         $user = executeResult($sql, true);
@@ -411,15 +420,14 @@
         if (empty($network)){
             die(json_encode(array('code' => 1, 'data' => 'Nhà mạng không tồn tại')));
         }
-        $fee =  $network['fee'];
         $sql = "SELECT `balance` FROM `users` WHERE `email` = '$email'";
         $balance = executeResult($sql, true);
-        if ($balance['balance'] < ($price*$quantity + $fee*($price*$quantity))){
+        if ($balance['balance'] < $price){
             die(json_encode(array('code' => 1, 'data' => 'Số dư không đủ để thực hiện giao dịch')));
         }else{
-            $updateWallet = "UPDATE `users` SET `balance` = `balance` - $price*$quantity - $fee*($price*$quantity) WHERE `email` = '$email'";
+            $updateWallet = "UPDATE `users` SET `balance` = `balance` - $price WHERE `email` = '$email'";
             execute($updateWallet);
-            topupHistory($email,$networkname,$price,$quantity);
+            topupHistory($email,$networkname,$price);
             die(json_encode(array('code' => 0, 'data' => 'Mua thẻ thành công')));
         }
     }
@@ -521,12 +529,26 @@
         $sql = "SELECT * FROM `users` WHERE `email` = '$email'";
         $user = executeResult($sql, true);
         $phone = $user['phone'];
-        $sql = "SELECT * FROM `transactions` WHERE `email` = '$email' OR `receiver` = '$phone' AND `approval` = 1 ORDER BY `datetrans` DESC";
-        $transaction = executeResult($sql, false);
-        if (empty($transaction)){
+        $sql = "SELECT * FROM `transactions` WHERE `email` = '$email' OR `receiver` = '$phone' ORDER BY `datetrans` DESC";
+        $transactions = executeResult($sql);
+        if (empty($transactions)){
             die(json_encode(array('code' => 1, 'data' => [])));
         }
-        die(json_encode(array('code' => 0, 'data' => $transaction)));
+        #create a array of 12 array 
+        $result = array();
+        for ($i = 0; $i < 12; $i++){
+            $result[$i] = array();
+        }
+        foreach($transactions as $transaction){
+            $date = $transaction['datetrans'];
+            $transMonth = date('m', strtotime($date));
+            $transYear = date('Y', strtotime($date));
+            if($transYear == date('Y')){
+                $index = $transMonth - 1;
+                array_push($result[$index], $transaction);
+            }
+        }
+        die(json_encode(array('code' => 0, 'data' => $result)));
     }
 
     function getTransaction($idtrans,$transtype){
