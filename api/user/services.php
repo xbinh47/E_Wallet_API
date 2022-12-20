@@ -159,6 +159,16 @@
         }
     }
 
+    function changInfo($email,$birthday,$address){
+        if(!checkUser($email)){
+            die(json_encode(array('code' => 1,'data' =>"User does not exist")));
+        }
+        $date = date('Y-m-d', strtotime($birthday));
+        $sql = "UPDATE `users` SET `birthday` = '$date', `address` = '$address' WHERE `email` = '$email'";
+        execute($sql);
+        die(json_encode(array('code' => 0,'data' =>"Change info successfully")));
+    }
+
     function linkCard($email,$cardnumber,$cccd,$name,$type){
         $sql = "SELECT * FROM `debidcard` WHERE `cardnumber` = '$cardnumber'";
         $card = executeResult($sql, true);
