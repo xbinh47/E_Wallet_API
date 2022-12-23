@@ -102,7 +102,11 @@ form{
 }
 
 #logo {
-    padding-top: 8px;
+    margin-top: 24px;
+}
+
+#logo_img{
+    height: 60px;
 }
 
 #tab {

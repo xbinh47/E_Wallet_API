@@ -38,7 +38,7 @@
             <div id="side-bar" class="col-1">
                 <div id="logo">
                     <a href="index.php">
-                        <img alt="" src="../img/logo.png">
+                        <img id="logo_img" alt="" src="../img/logo.png">
                     </a>
                 </div>
                 <hr>
@@ -72,7 +72,7 @@
                 </header>
                 <div class="container-fluid">
                     <div class="row mt-3">
-                        <div class="col">
+                        <div class="col d-flex justify-content-center">
                             <h2 id="section-name" class="d-inline-block"></h2>
                         </div>
                     </div>
